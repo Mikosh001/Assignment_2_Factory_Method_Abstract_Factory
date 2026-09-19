@@ -1,0 +1,44 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam classFontSize 16
+hide empty members
+top to bottom direction
+
+class DeliveryApplication <<Client>> {
+  -logistics: Logistics
+  +run(cargo: String, destination: String): void
+}
+abstract class Logistics <<Creator>> {
+  {abstract} +createTransport(): Transport
+  +planDelivery(cargo: String, destination: String): void
+}
+class RoadLogistics <<Concrete Creator>> {
+  +createTransport(): Transport
+}
+class SeaLogistics <<Concrete Creator>> {
+  +createTransport(): Transport
+}
+interface Transport <<Product>> {
+  +deliver(cargo: String, destination: String): void
+}
+class Truck <<Concrete Product>> {
+  +deliver(cargo: String, destination: String): void
+}
+class Ship <<Concrete Product>> {
+  +deliver(cargo: String, destination: String): void
+}
+
+DeliveryApplication --> Logistics : calls planDelivery()
+Logistics <|-- RoadLogistics
+Logistics <|-- SeaLogistics
+Logistics ..> Transport : creates through createTransport(); calls deliver()
+Transport <|.. Truck
+Transport <|.. Ship
+RoadLogistics ..> Truck : creates
+SeaLogistics ..> Ship : creates
+@enduml

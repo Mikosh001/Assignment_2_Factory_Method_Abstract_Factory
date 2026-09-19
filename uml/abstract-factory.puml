@@ -1,0 +1,69 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam monochrome true
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam classFontSize 16
+hide empty members
+top to bottom direction
+
+class DeliveryApplication <<Client>> {
+  -button: Button
+  -checkbox: Checkbox
+  -logistics: Logistics
+  +DeliveryApplication(guiFactory: GUIFactory, logistics: Logistics)
+  +run(cargo: String, destination: String): void
+}
+interface GUIFactory <<Abstract Factory>> {
+  +createButton(): Button
+  +createCheckbox(): Checkbox
+}
+class WindowsFactory <<Concrete Factory>> {
+  +createButton(): Button
+  +createCheckbox(): Checkbox
+}
+class MacOSFactory <<Concrete Factory>> {
+  +createButton(): Button
+  +createCheckbox(): Checkbox
+}
+interface Button <<Abstract Product>> {
+  +paint(): void
+}
+interface Checkbox <<Abstract Product>> {
+  +paint(): void
+}
+class WindowsButton <<Windows Product>> {
+  +paint(): void
+}
+class WindowsCheckbox <<Windows Product>> {
+  +paint(): void
+}
+class MacOSButton <<macOS Product>> {
+  +paint(): void
+}
+class MacOSCheckbox <<macOS Product>> {
+  +paint(): void
+}
+abstract class Logistics <<Factory Method Creator>> {
+  +planDelivery(cargo: String, destination: String): void
+}
+
+DeliveryApplication ..> GUIFactory : constructor uses
+DeliveryApplication --> Button : paints
+DeliveryApplication --> Checkbox : paints
+DeliveryApplication --> Logistics : plans delivery
+GUIFactory <|.. WindowsFactory
+GUIFactory <|.. MacOSFactory
+GUIFactory ..> Button : returns
+GUIFactory ..> Checkbox : returns
+Button <|.. WindowsButton
+Button <|.. MacOSButton
+Checkbox <|.. WindowsCheckbox
+Checkbox <|.. MacOSCheckbox
+WindowsFactory ..> WindowsButton
+WindowsFactory ..> WindowsCheckbox
+MacOSFactory ..> MacOSButton
+MacOSFactory ..> MacOSCheckbox
+@enduml
